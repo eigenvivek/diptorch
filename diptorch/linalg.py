@@ -40,4 +40,28 @@ def eigvalsh2(ii, ij, jj):
 
 # %% ../notebooks/01_linalg.ipynb 8
 def eigvalsh3(ii, ij, ik, jj, jk, kk):
-    pass
+    q = (ii + jj + kk) / 3
+    p1 = torch.concat([ij, ik, jk], dim=-1).square().sum(-1, keepdim=True)
+    p2 = (torch.concat([ii, jj, kk], dim=-1) - q).square().sum(
+        dim=-1, keepdim=True
+    ) + 2 * p1
+    p = (p2 / 6).sqrt()
+
+    r = deth3(ii - q, ij, ik, jj - q, jk, kk - q) / p.pow(3) / 2
+    r = r.clamp(-1, 1)
+    phi = r.arccos() / 3
+
+    eig3 = q + 2 * p * phi.cos()
+    eig1 = q + 2 * p * (phi + 2 * torch.pi / 3).cos()
+    eig2 = 3 * q - eig1 - eig3
+    return torch.concat([eig1, eig2, eig3], dim=-1)
+
+# %% ../notebooks/01_linalg.ipynb 9
+def deth3(ii, ij, ik, jj, jk, kk):
+    return (
+        +ii * jj * kk
+        + 2 * ij * ik * jk
+        - ii * jk.square()
+        - jj * ik.square()
+        - kk * ij.square()
+    )
