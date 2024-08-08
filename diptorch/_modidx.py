@@ -5,4 +5,10 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://eigenvivek.github.io',
                 'git_url': 'https://github.com/eigenvivek/diptorch',
                 'lib_path': 'diptorch'},
-  'syms': {'diptorch.filter': {'diptorch.filter.foo': ('filter.html#foo', 'diptorch/filter.py')}}}
+  'syms': { 'diptorch.filters': { 'diptorch.filters._conv': ('filters.html#_conv', 'diptorch/filters.py'),
+                                  'diptorch.filters._gaussian_kernel_1d': ('filters.html#_gaussian_kernel_1d', 'diptorch/filters.py'),
+                                  'diptorch.filters._hessian_2d': ('filters.html#_hessian_2d', 'diptorch/filters.py'),
+                                  'diptorch.filters._hessian_3d': ('filters.html#_hessian_3d', 'diptorch/filters.py'),
+                                  'diptorch.filters.gaussian_filter': ('filters.html#gaussian_filter', 'diptorch/filters.py'),
+                                  'diptorch.filters.hessian': ('filters.html#hessian', 'diptorch/filters.py')},
+            'diptorch.utils': {'diptorch.utils.astronaut': ('utils.html#astronaut', 'diptorch/utils.py')}}}
