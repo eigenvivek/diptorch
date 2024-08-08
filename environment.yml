@@ -6,3 +6,5 @@ channels:
 dependencies:
   - pip
   - pytorch
+  - matplotlib
+  - scikit-image
