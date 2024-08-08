@@ -11,4 +11,5 @@ d = { 'settings': { 'branch': 'main',
                                   'diptorch.filters._hessian_3d': ('filters.html#_hessian_3d', 'diptorch/filters.py'),
                                   'diptorch.filters.gaussian_filter': ('filters.html#gaussian_filter', 'diptorch/filters.py'),
                                   'diptorch.filters.hessian': ('filters.html#hessian', 'diptorch/filters.py')},
+            'diptorch.linalg': {'diptorch.linalg.eigvalsh2': ('linalg.html#eigvalsh2', 'diptorch/linalg.py')},
             'diptorch.utils': {'diptorch.utils.astronaut': ('utils.html#astronaut', 'diptorch/utils.py')}}}
