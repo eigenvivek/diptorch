@@ -131,14 +131,60 @@ def _hessian_2d(img: torch.Tensor, sigma: float, **kwargs):
     return xx, xy, yy
 
 
-def _hessian_3d(img: torch.Tensor, sigma: float, **kwargs):
-    xx = gaussian_filter(img, sigma, order=[0, 0, 2], **kwargs)
-    yy = gaussian_filter(img, sigma, order=[0, 2, 0], **kwargs)
-    zz = gaussian_filter(img, sigma, order=[2, 0, 0], **kwargs)
-    xy = gaussian_filter(img, sigma, order=[0, 1, 1], **kwargs)
-    xz = gaussian_filter(img, sigma, order=[1, 0, 1], **kwargs)
-    yz = gaussian_filter(img, sigma, order=[1, 1, 0], **kwargs)
-    return xx, xy, xz, yy, yz, zz
+def _hessian_3d(
+    img: torch.Tensor, sigma: float, truncate: float = 4.0, mode: str = "reflect"
+):
+    # Precompute 1D kernels for the zeroth, first, and second derivatives
+    g0 = _gaussian_kernel_1d(sigma, 0, truncate, img.dtype, img.device)
+    g1 = _gaussian_kernel_1d(sigma, 1, truncate, img.dtype, img.device)
+    g2 = _gaussian_kernel_1d(sigma, 2, truncate, img.dtype, img.device)
+    padding = len(g0) // 2
+
+    # Fuse individual kernels into a multi-channel 1D kernel
+    kx = torch.concat(
+        [
+            g2.view(1, 1, 1, 1, -1),
+            g1.view(1, 1, 1, 1, -1),
+            g1.view(1, 1, 1, 1, -1),
+            g0.view(1, 1, 1, 1, -1),
+            g0.view(1, 1, 1, 1, -1),
+            g0.view(1, 1, 1, 1, -1),
+        ],
+        dim=0,
+    )
+    ky = torch.concat(
+        [
+            g0.view(1, 1, 1, -1, 1),
+            g1.view(1, 1, 1, -1, 1),
+            g0.view(1, 1, 1, -1, 1),
+            g2.view(1, 1, 1, -1, 1),
+            g1.view(1, 1, 1, -1, 1),
+            g0.view(1, 1, 1, -1, 1),
+        ],
+        dim=0,
+    )
+    kz = torch.concat(
+        [
+            g0.view(1, 1, -1, 1, 1),
+            g0.view(1, 1, -1, 1, 1),
+            g1.view(1, 1, -1, 1, 1),
+            g0.view(1, 1, -1, 1, 1),
+            g1.view(1, 1, -1, 1, 1),
+            g2.view(1, 1, -1, 1, 1),
+        ],
+        dim=0,
+    )
+
+    # Run vectorized convolutions over each dimension
+    x = img.expand(-1, 6, -1, -1, -1)
+    x = F.pad(x, (padding, padding, 0, 0, 0, 0), mode=mode)
+    x = F.conv3d(x, weight=kx, groups=6)
+    x = F.pad(x, (0, 0, padding, padding, 0, 0), mode=mode)
+    x = F.conv3d(x, weight=ky, groups=6)
+    x = F.pad(x, (0, 0, 0, 0, padding, padding), mode=mode)
+    x = F.conv3d(x, weight=kz, groups=6)
+
+    return x.split(1, 1)
 
 
 def _hessian_as_matrix(*args):
