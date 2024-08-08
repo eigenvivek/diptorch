@@ -19,4 +19,5 @@ d = { 'settings': { 'branch': 'main',
                                  'diptorch.linalg.eigvalsh': ('linalg.html#eigvalsh', 'diptorch/linalg.py'),
                                  'diptorch.linalg.eigvalsh2': ('linalg.html#eigvalsh2', 'diptorch/linalg.py'),
                                  'diptorch.linalg.eigvalsh3': ('linalg.html#eigvalsh3', 'diptorch/linalg.py')},
-            'diptorch.utils': {'diptorch.utils.astronaut': ('utils.html#astronaut', 'diptorch/utils.py')}}}
+            'diptorch.utils': { 'diptorch.utils.astronaut': ('utils.html#astronaut', 'diptorch/utils.py'),
+                                'diptorch.utils.imshow': ('utils.html#imshow', 'diptorch/utils.py')}}}
