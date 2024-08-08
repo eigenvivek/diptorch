@@ -84,7 +84,6 @@ def eigvalsh3(
     eig3 = q + 2 * p * phi.cos()
     eig1 = q + 2 * p * (phi + 2 * torch.pi / 3).cos()
     eig2 = 3 * q - eig1 - eig3
-    print(eig1.shape, eig2.shape, eig3.shape)
     return torch.concat([eig1, eig2, eig3], dim=1)
 
 # %% ../notebooks/01_linalg.ipynb 9
