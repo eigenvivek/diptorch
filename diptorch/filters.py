@@ -117,11 +117,14 @@ def hessian(
 def hessian_eigenvalues(img: torch.Tensor, sigma: float, **kwargs):
     H = hessian(img, sigma, **kwargs)
     if len(H) == 3:
-        return eigvalsh2(*H)
+        eig = eigvalsh2(*H)
     elif len(H) == 6:
-        return eigvalsh3(*H)
+        eig = eigvalsh3(*H)
     else:
         raise ValueError(f"Unrecognized number of upper triangular elements: {len(H)}")
+
+    # Sort the eigenvalues such that |lambda[1]| <= ... <= |lambda[n]|
+    return torch.take_along_dim(eig, eig.abs().argsort(dim=1), dim=1)
 
 # %% ../notebooks/00_filters.ipynb 9
 def _hessian_2d(img: torch.Tensor, sigma: float, **kwargs):
