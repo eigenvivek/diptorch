@@ -30,7 +30,7 @@ def eigvalsh(A: torch.Tensor, check_valid: bool = True) -> torch.Tensor:
 # %% ../notebooks/01_linalg.ipynb 7
 def eigvalsh2(ii, ij, jj):
     tr = ii + jj
-    det = ii * jj - ii.square()
+    det = ii * jj - ij.square()
 
     disc = (tr.square() - 4 * det).sqrt()
     disc = torch.concat([-disc, disc], dim=-1)
