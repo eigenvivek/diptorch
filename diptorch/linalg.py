@@ -8,24 +8,26 @@ import torch
 
 # %% ../notebooks/01_linalg.ipynb 5
 def _is_square(A: torch.Tensor) -> bool:
-    *_, i, j = A.shape
+    _, i, j, *_ = A.shape
     assert i == j, "Matrix is not square"
 
 
 def _is_hermitian(A: torch.Tensor) -> bool:
-    return torch.testing.assert_close(A, A.mH, msg="Matrix is not Hermitian")
+    return torch.testing.assert_close(
+        A, A.transpose(1, 2).conj(), msg="Matrix is not Hermitian"
+    )
 
 # %% ../notebooks/01_linalg.ipynb 6
 def eigvalsh(A: torch.Tensor, check_valid: bool = True) -> torch.Tensor:
     if check_valid:
         _is_square(A)
         _is_hermitian(A)
-    if A.shape[-1] == 2:
-        return eigvalsh2(*A[..., *torch.triu_indices(2, 2)].split(1, dim=-1))
-    elif A.shape[-1] == 3:
-        return eigvalsh3(*A[..., *torch.triu_indices(3, 3)].split(1, dim=-1))
+    if A.shape[1] == 2:
+        return eigvalsh2(*A[:, *torch.triu_indices(2, 2)].split(1, dim=1))
+    elif A.shape[1] == 3:
+        return eigvalsh3(*A[:, *torch.triu_indices(3, 3)].split(1, dim=1))
     else:
-        return ValueError("Only supports 2×2 and 3×3 matrices")
+        raise ValueError("Only supports 2×2 and 3×3 matrices")
 
 # %% ../notebooks/01_linalg.ipynb 7
 def eigvalsh2(ii, ij, jj):
@@ -33,7 +35,7 @@ def eigvalsh2(ii, ij, jj):
     det = ii * jj - ij.square()
 
     disc = (tr.square() - 4 * det).sqrt()
-    disc = torch.concat([-disc, disc], dim=-1)
+    disc = torch.concat([-disc, disc], dim=1)
 
     eigvals = (tr + disc) / 2
     return eigvals
@@ -59,7 +61,7 @@ def eigvalsh3(ii, ij, ik, jj, jk, kk):
 # %% ../notebooks/01_linalg.ipynb 9
 def deth3(ii, ij, ik, jj, jk, kk):
     return (
-        +ii * jj * kk
+        ii * jj * kk
         + 2 * ij * ik * jk
         - ii * jk.square()
         - jj * ik.square()
