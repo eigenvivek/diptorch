@@ -19,6 +19,13 @@ def _is_hermitian(A: torch.Tensor) -> bool:
 
 # %% ../notebooks/01_linalg.ipynb 6
 def eigvalsh(A: torch.Tensor, check_valid: bool = True) -> torch.Tensor:
+    """
+    Compute the eigenvalues of a batched tensor with shape [B C C H W (D)]
+    where C is 2 or 3, and the tensor is Hermitian in dimensions 1 and 2.
+
+    Returns eigenvalues in a tensor with shape [1 2 H W] or [1 3 H W D],
+    for 2D and 3D inputs, respectively, sorted in ascending order.
+    """
     if check_valid:
         _is_square(A)
         _is_hermitian(A)
@@ -30,7 +37,14 @@ def eigvalsh(A: torch.Tensor, check_valid: bool = True) -> torch.Tensor:
         raise ValueError("Only supports 2×2 and 3×3 matrices")
 
 # %% ../notebooks/01_linalg.ipynb 7
-def eigvalsh2(ii, ij, jj):
+def eigvalsh2(ii: torch.Tensor, ij: torch.Tensor, jj: torch.Tensor) -> torch.Tensor:
+    """
+    Compute the eigenvalues of a batched Hermitian 2×2 tensor
+    where blocks have shape [1 1 H W].
+
+    Returns eigenvalues in a tensor with shape [1 2 H W]
+    sorted in ascending order.
+    """
     tr = ii + jj
     det = ii * jj - ij.square()
 
@@ -41,11 +55,25 @@ def eigvalsh2(ii, ij, jj):
     return eigvals
 
 # %% ../notebooks/01_linalg.ipynb 8
-def eigvalsh3(ii, ij, ik, jj, jk, kk):
+def eigvalsh3(
+    ii: torch.Tensor,
+    ij: torch.Tensor,
+    ik: torch.Tensor,
+    jj: torch.Tensor,
+    jk: torch.Tensor,
+    kk: torch.Tensor,
+) -> torch.Tensor:
+    """
+    Compute the eigenvalues of a batched Hermitian 3×3 tensor
+    where blocks have shape [1 1 H W D].
+
+    Returns eigenvalues in a tensor with shape [1 3 H W D]
+    sorted in ascending order.
+    """
     q = (ii + jj + kk) / 3
-    p1 = torch.concat([ij, ik, jk], dim=-1).square().sum(-1, keepdim=True)
-    p2 = (torch.concat([ii, jj, kk], dim=-1) - q).square().sum(
-        dim=-1, keepdim=True
+    p1 = torch.concat([ij, ik, jk], dim=1).square().sum(1, keepdim=True)
+    p2 = (torch.concat([ii, jj, kk], dim=1) - q).square().sum(
+        dim=1, keepdim=True
     ) + 2 * p1
     p = (p2 / 6).sqrt()
 
@@ -56,7 +84,8 @@ def eigvalsh3(ii, ij, ik, jj, jk, kk):
     eig3 = q + 2 * p * phi.cos()
     eig1 = q + 2 * p * (phi + 2 * torch.pi / 3).cos()
     eig2 = 3 * q - eig1 - eig3
-    return torch.concat([eig1, eig2, eig3], dim=-1)
+    print(eig1.shape, eig2.shape, eig3.shape)
+    return torch.concat([eig1, eig2, eig3], dim=1)
 
 # %% ../notebooks/01_linalg.ipynb 9
 def deth3(ii, ij, ik, jj, jk, kk):
