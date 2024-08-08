@@ -62,6 +62,7 @@ def eigvalsh3(
     jj: torch.Tensor,
     jk: torch.Tensor,
     kk: torch.Tensor,
+    eps: float = 1e-8,
 ) -> torch.Tensor:
     """
     Compute the eigenvalues of a batched Hermitian 3×3 tensor
@@ -70,14 +71,15 @@ def eigvalsh3(
     Returns eigenvalues in a tensor with shape [1 3 H W D]
     sorted in ascending order.
     """
-    q = (ii + jj + kk) / 3
-    p1 = torch.concat([ij, ik, jk], dim=1).square().sum(1, keepdim=True)
-    p2 = (torch.concat([ii, jj, kk], dim=1) - q).square().sum(
-        dim=1, keepdim=True
-    ) + 2 * p1
-    p = (p2 / 6).sqrt()
+    diag = torch.concat([ii, jj, kk], dim=1)
+    triu = torch.concat([ij, ik, jk], dim=1)
 
-    r = deth3(ii - q, ij, ik, jj - q, jk, kk - q) / p.pow(3) / 2
+    q = diag.sum(dim=1, keepdim=True) / 3
+    p1 = triu.square().sum(dim=1, keepdim=True)
+    p2 = (diag - q).square().sum(dim=1, keepdim=True)
+    p = ((2 * p1 + p2) / 6).sqrt()
+
+    r = deth3(ii - q, ij, ik, jj - q, jk, kk - q) / (p.pow(3) + eps) / 2
     r = r.clamp(-1, 1)
     phi = r.arccos() / 3
 
