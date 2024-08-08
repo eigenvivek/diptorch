@@ -71,3 +71,47 @@ plt.show()
 ```
 
 ![](index_files/figure-commonmark/cell-5-output-1.png)
+
+## Hessian matrix
+
+``` python
+from diptorch.filters import hessian, hessian_eigenvalues
+from einops import rearrange
+```
+
+``` python
+# Hessian matrix of an image (all second-order partial derivatives)
+img = astronaut()
+
+H = hessian(img, sigma=2.5, as_matrix=True)
+H = rearrange(H, "B C1 C2 H W -> B (C1 H) (C2 W)")
+
+plt.imshow(H.squeeze(), cmap="gray")
+plt.axis("off")
+plt.show()
+```
+
+![](index_files/figure-commonmark/cell-7-output-1.png)
+
+``` python
+# Eigenvalues of the Hessian matrix of an image
+img = astronaut()
+eig = hessian_eigenvalues(img, sigma=2.5)
+
+plt.figure(figsize=(9, 3))
+plt.subplot(131)
+plt.imshow(img.squeeze(), cmap="gray")
+plt.axis("off")
+plt.subplot(132)
+plt.imshow(eig.squeeze()[0], cmap="gray")
+plt.title("Smallest eigenvalue")
+plt.axis("off")
+plt.subplot(133)
+plt.imshow(eig.squeeze()[1], cmap="gray")
+plt.title("Largest eigenvalue")
+plt.axis("off")
+plt.tight_layout()
+plt.show()
+```
+
+![](index_files/figure-commonmark/cell-8-output-1.png)
