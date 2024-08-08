@@ -1,0 +1,8 @@
+name: diptorch
+channels:
+  - conda-forge
+  - pytorch
+  - nvidia
+dependencies:
+  - pip
+  - pytorch

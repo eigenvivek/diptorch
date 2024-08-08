@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "diptorch"
+  site-url: "https://eigenvivek.github.io/diptorch"
+  description: "Digital image processing in PyTorch"
+  repo-branch: main
+  repo-url: "https://github.com/eigenvivek/diptorch"
