@@ -15,22 +15,14 @@ pip install diptorch
 import matplotlib.pyplot as plt
 
 from diptorch.filters import gaussian_filter
-from diptorch.utils import astronaut
+from diptorch.utils import astronaut, imshow
 ```
 
 ``` python
 # Zero-th order Gaussian filter (smoothing)
 img = astronaut()
 img_filtered = gaussian_filter(img, sigma=2.5)
-
-plt.figure(figsize=(6, 3))
-plt.subplot(121)
-plt.imshow(img.squeeze(), cmap="gray")
-plt.axis("off")
-plt.subplot(122)
-plt.imshow(img_filtered.squeeze(), cmap="gray")
-plt.axis("off")
-plt.tight_layout()
+imshow(img, img_filtered)
 plt.show()
 ```
 
@@ -40,15 +32,7 @@ plt.show()
 # First-order Gaussian filter
 img = astronaut()
 img_filtered = gaussian_filter(img, sigma=2.5, order=1)
-
-plt.figure(figsize=(6, 3))
-plt.subplot(121)
-plt.imshow(img.squeeze(), cmap="gray")
-plt.axis("off")
-plt.subplot(122)
-plt.imshow(img_filtered.squeeze(), cmap="gray")
-plt.axis("off")
-plt.tight_layout()
+imshow(img, img_filtered)
 plt.show()
 ```
 
@@ -58,15 +42,7 @@ plt.show()
 # Second-order Gaussian filter on the height dimension (y-axis)
 img = astronaut()
 img_filtered = gaussian_filter(img, sigma=2.5, order=[2, 0])
-
-plt.figure(figsize=(6, 3))
-plt.subplot(121)
-plt.imshow(img.squeeze(), cmap="gray")
-plt.axis("off")
-plt.subplot(122)
-plt.imshow(img_filtered.squeeze(), cmap="gray")
-plt.axis("off")
-plt.tight_layout()
+imshow(img, img_filtered)
 plt.show()
 ```
 
@@ -82,11 +58,10 @@ from einops import rearrange
 ``` python
 # Hessian matrix of an image (all second-order partial derivatives)
 img = astronaut()
-
 H = hessian(img, sigma=2.5, as_matrix=True)
-H = rearrange(H, "B C1 C2 H W -> B (C1 H) (C2 W)")
+H = rearrange(H, "B C1 C2 H W -> B (C1 H) (C2 W)").squeeze()
 
-plt.imshow(H.squeeze(), cmap="gray")
+plt.imshow(H, cmap="gray")
 plt.axis("off")
 plt.show()
 ```
@@ -95,22 +70,12 @@ plt.show()
 
 ``` python
 # Eigenvalues of the Hessian matrix of an image
+# sorted by the magnitude of the eigenvalues
 img = astronaut()
 eig = hessian_eigenvalues(img, sigma=2.5)
-
-plt.figure(figsize=(9, 3))
-plt.subplot(131)
-plt.imshow(img.squeeze(), cmap="gray")
-plt.axis("off")
-plt.subplot(132)
-plt.imshow(eig.squeeze()[0], cmap="gray")
-plt.title("Smallest eigenvalue")
-plt.axis("off")
-plt.subplot(133)
-plt.imshow(eig.squeeze()[1], cmap="gray")
-plt.title("Largest eigenvalue")
-plt.axis("off")
-plt.tight_layout()
+_, axs = imshow(img, *eig.split(1, 1))
+axs[1].set(title="Smallest magnitude\neigenvalue")
+axs[2].set(title="Largest magnitude\neigenvalue")
 plt.show()
 ```
 
