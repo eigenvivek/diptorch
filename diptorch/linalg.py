@@ -48,7 +48,7 @@ def eigvalsh2(ii: torch.Tensor, ij: torch.Tensor, jj: torch.Tensor) -> torch.Ten
     tr = ii + jj
     det = ii * jj - ij.square()
 
-    disc = (tr.square() - 4 * det).sqrt()
+    disc = (tr.square() - 4 * det).clamp(0).sqrt()
     disc = torch.concat([-disc, disc], dim=1)
 
     eigvals = (tr + disc) / 2
