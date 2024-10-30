@@ -1,0 +1,112 @@
+[
+  {
+    "objectID": "filters.html",
+    "href": "filters.html",
+    "title": "filters",
+    "section": "",
+    "text": "Implements filtering with a \\(k\\)-order Gaussian derivative as a series of 1D convolutions. Currently supports up to second-order derivatives.\n\nsource\n\n\n\n gaussian_filter (img:torch.Tensor, sigma:float, order:int|list=0,\n                  mode:str='reflect', truncate:float=4.0)\n\n*Convolves an image with a Gaussian kernel (or its derivatives).\nInspired by the API of scipy.ndimage.gaussian_filter and the implementation of diplib.Gauss.*\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimg\nTensor\n\nThe input tensor\n\n\nsigma\nfloat\n\nStandard deviation for the Gaussian kernel\n\n\norder\nint | list\n0\nThe order of the filter’s derivative along each dim\n\n\nmode\nstr\nreflect\nPadding mode for torch.nn.functional.pad\n\n\ntruncate\nfloat\n4.0\nNumber of standard deviations to sample the filter\n\n\nReturns\nTensor",
+    "crumbs": [
+      "filters"
+    ]
+  },
+  {
+    "objectID": "filters.html#gaussian-filter",
+    "href": "filters.html#gaussian-filter",
+    "title": "filters",
+    "section": "",
+    "text": "Implements filtering with a \\(k\\)-order Gaussian derivative as a series of 1D convolutions. Currently supports up to second-order derivatives.\n\nsource\n\n\n\n gaussian_filter (img:torch.Tensor, sigma:float, order:int|list=0,\n                  mode:str='reflect', truncate:float=4.0)\n\n*Convolves an image with a Gaussian kernel (or its derivatives).\nInspired by the API of scipy.ndimage.gaussian_filter and the implementation of diplib.Gauss.*\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimg\nTensor\n\nThe input tensor\n\n\nsigma\nfloat\n\nStandard deviation for the Gaussian kernel\n\n\norder\nint | list\n0\nThe order of the filter’s derivative along each dim\n\n\nmode\nstr\nreflect\nPadding mode for torch.nn.functional.pad\n\n\ntruncate\nfloat\n4.0\nNumber of standard deviations to sample the filter\n\n\nReturns\nTensor",
+    "crumbs": [
+      "filters"
+    ]
+  },
+  {
+    "objectID": "filters.html#hessian-matrix-of-an-image",
+    "href": "filters.html#hessian-matrix-of-an-image",
+    "title": "filters",
+    "section": "Hessian matrix of an image",
+    "text": "Hessian matrix of an image\nCompute a symmetric matrix of all second-order partial Gaussian derivatives of an image.\n\nsource\n\nhessian_eigenvalues\n\n hessian_eigenvalues (img:torch.Tensor, sigma:float, **kwargs)\n\n\nsource\n\n\nhessian\n\n hessian (img:torch.Tensor, sigma:float, as_matrix:bool=False, **kwargs)\n\nCompute the Hessian of a 2D or 3D image.",
+    "crumbs": [
+      "filters"
+    ]
+  },
+  {
+    "objectID": "filters.html#frangi",
+    "href": "filters.html#frangi",
+    "title": "filters",
+    "section": "Frangi",
+    "text": "Frangi\nImplements the Frangi filter for enhancing tubular structures in 2D and 3D images. Refer to the original paper: Frangi et al., 1998\n\nsource\n\nfrangi\n\n frangi (image:torch.Tensor, sigma_range:tuple=(1, 10), scale_step:int=2,\n         sigmas:list=None, alpha:float=0.5, beta:float=0.5,\n         gamma:float=None, eps:float=1e-10, device:str|torch.device=None)\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimage\nTensor\n\nThe intput image\n\n\nsigma_range\ntuple\n(1, 10)\nThe range of sigmas to use\n\n\nscale_step\nint\n2\nThe step between sigmas\n\n\nsigmas\nlist\nNone\nOptional list of sigmas to use\n\n\nalpha\nfloat\n0.5\nPlate-like and line-like structures threshold\n\n\nbeta\nfloat\n0.5\nBlob-like structures threshold\n\n\ngamma\nfloat\nNone\nSecond-order structure threshold\n\n\neps\nfloat\n1e-10\n\n\n\ndevice\nstr | torch.device\nNone\n\n\n\nReturns\ntensor",
+    "crumbs": [
+      "filters"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "diptorch",
+    "section": "",
+    "text": "pip install diptorch",
+    "crumbs": [
+      "diptorch"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "diptorch",
+    "section": "",
+    "text": "pip install diptorch",
+    "crumbs": [
+      "diptorch"
+    ]
+  },
+  {
+    "objectID": "index.html#hello-world",
+    "href": "index.html#hello-world",
+    "title": "diptorch",
+    "section": "Hello, World!",
+    "text": "Hello, World!\n\nimport matplotlib.pyplot as plt\n\nfrom diptorch.filters import gaussian_filter\nfrom diptorch.utils import astronaut, imshow\n\n\n# Zero-th order Gaussian filter (smoothing)\nimg = astronaut()\nimg_filtered = gaussian_filter(img, sigma=2.5)\nimshow(img, img_filtered)\nplt.show()\n\n\n\n\n\n\n\n\n\n# First-order Gaussian filter\nimg = astronaut()\nimg_filtered = gaussian_filter(img, sigma=2.5, order=1)\nimshow(img, img_filtered)\nplt.show()\n\n\n\n\n\n\n\n\n\n# Second-order Gaussian filter on the height dimension (y-axis)\nimg = astronaut()\nimg_filtered = gaussian_filter(img, sigma=2.5, order=[2, 0])\nimshow(img, img_filtered)\nplt.show()",
+    "crumbs": [
+      "diptorch"
+    ]
+  },
+  {
+    "objectID": "index.html#hessian-matrix",
+    "href": "index.html#hessian-matrix",
+    "title": "diptorch",
+    "section": "Hessian matrix",
+    "text": "Hessian matrix\n\nfrom diptorch.filters import hessian, hessian_eigenvalues\nfrom einops import rearrange\n\n\n# Hessian matrix of an image (all second-order partial derivatives)\nimg = astronaut()\nH = hessian(img, sigma=2.5, as_matrix=True)\nH = rearrange(H, \"B C1 C2 H W -&gt; B (C1 H) (C2 W)\").squeeze()\n\nplt.imshow(H, cmap=\"gray\")\nplt.axis(\"off\")\nplt.show()\n\n\n\n\n\n\n\n\n\n# Eigenvalues of the Hessian matrix of an image\n# sorted by the magnitude of the eigenvalues\nimg = astronaut()\neig = hessian_eigenvalues(img, sigma=2.5)\n_, axs = imshow(img, *eig.split(1, 1))\naxs[1].set(title=\"Smallest magnitude\\neigenvalue\")\naxs[2].set(title=\"Largest magnitude\\neigenvalue\")\nplt.show()",
+    "crumbs": [
+      "diptorch"
+    ]
+  },
+  {
+    "objectID": "utils.html",
+    "href": "utils.html",
+    "title": "utils",
+    "section": "",
+    "text": "source\n\nastronaut\n\n astronaut (dtype:torch.dtype=torch.float32)\n\n\nsource\n\n\nimshow\n\n imshow (*imgs)",
+    "crumbs": [
+      "utils"
+    ]
+  },
+  {
+    "objectID": "linalg.html",
+    "href": "linalg.html",
+    "title": "linalg",
+    "section": "",
+    "text": "Direct eigenvalue calculators for special matrices for which closed-form solutions exist (see here for more details).\n\nsource\n\n\n\n eigvalsh (A:torch.Tensor, check_valid:bool=True)\n\n*Compute the eigenvalues of a batched tensor with shape [B C C H W (D)] where C is 2 or 3, and the tensor is Hermitian in dimensions 1 and 2.\nReturns eigenvalues in a tensor with shape [1 2 H W] or [1 3 H W D], for 2D and 3D inputs, respectively, sorted in ascending order.*\n\nsource\n\n\n\n\n eigvalsh2 (ii:torch.Tensor, ij:torch.Tensor, jj:torch.Tensor)\n\n*Compute the eigenvalues of a batched Hermitian 2×2 tensor where blocks have shape [1 1 H W].\nReturns eigenvalues in a tensor with shape [1 2 H W] sorted in ascending order.*\n\nsource\n\n\n\n\n eigvalsh3 (ii:torch.Tensor, ij:torch.Tensor, ik:torch.Tensor,\n            jj:torch.Tensor, jk:torch.Tensor, kk:torch.Tensor,\n            eps:float=1e-08)\n\n*Compute the eigenvalues of a batched Hermitian 3×3 tensor where blocks have shape [1 1 H W D].\nReturns eigenvalues in a tensor with shape [1 3 H W D] sorted in ascending order.*\n\n\n\nUnsurprisingly, our closed-form solvers are much faster than PyTorch’s torch.linalg.eigvalsh for 2- and 3-dimensional Hermitian matrices.\n\n# Time diptorch's implementation for 2 dimensions\nA = torch.randn(100, 2, 2, 25, 25)\nA = A + A.transpose(1, 2)\n\n2.76 ms ± 87.5 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n# Time torch's implementation for 2 dimensions\nB = A.permute(0, -2, -1, 1, 2)\n\n47 ms ± 18.3 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)\n\n\n\n# Time diptorch's implementation for 3 dimensions\nA = torch.randn(100, 3, 3, 25, 25)\nA = A + A.transpose(1, 2)\n\n5.01 ms ± 138 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n# Time torch's implementation for 3 dimensions\nB = A.permute(0, -2, -1, 1, 2)\n\n67.9 ms ± 438 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+    "crumbs": [
+      "linalg"
+    ]
+  },
+  {
+    "objectID": "linalg.html#and-33-hermitian-eigenvalue-solvers",
+    "href": "linalg.html#and-33-hermitian-eigenvalue-solvers",
+    "title": "linalg",
+    "section": "",
+    "text": "Direct eigenvalue calculators for special matrices for which closed-form solutions exist (see here for more details).\n\nsource\n\n\n\n eigvalsh (A:torch.Tensor, check_valid:bool=True)\n\n*Compute the eigenvalues of a batched tensor with shape [B C C H W (D)] where C is 2 or 3, and the tensor is Hermitian in dimensions 1 and 2.\nReturns eigenvalues in a tensor with shape [1 2 H W] or [1 3 H W D], for 2D and 3D inputs, respectively, sorted in ascending order.*\n\nsource\n\n\n\n\n eigvalsh2 (ii:torch.Tensor, ij:torch.Tensor, jj:torch.Tensor)\n\n*Compute the eigenvalues of a batched Hermitian 2×2 tensor where blocks have shape [1 1 H W].\nReturns eigenvalues in a tensor with shape [1 2 H W] sorted in ascending order.*\n\nsource\n\n\n\n\n eigvalsh3 (ii:torch.Tensor, ij:torch.Tensor, ik:torch.Tensor,\n            jj:torch.Tensor, jk:torch.Tensor, kk:torch.Tensor,\n            eps:float=1e-08)\n\n*Compute the eigenvalues of a batched Hermitian 3×3 tensor where blocks have shape [1 1 H W D].\nReturns eigenvalues in a tensor with shape [1 3 H W D] sorted in ascending order.*\n\n\n\nUnsurprisingly, our closed-form solvers are much faster than PyTorch’s torch.linalg.eigvalsh for 2- and 3-dimensional Hermitian matrices.\n\n# Time diptorch's implementation for 2 dimensions\nA = torch.randn(100, 2, 2, 25, 25)\nA = A + A.transpose(1, 2)\n\n2.76 ms ± 87.5 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n# Time torch's implementation for 2 dimensions\nB = A.permute(0, -2, -1, 1, 2)\n\n47 ms ± 18.3 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)\n\n\n\n# Time diptorch's implementation for 3 dimensions\nA = torch.randn(100, 3, 3, 25, 25)\nA = A + A.transpose(1, 2)\n\n5.01 ms ± 138 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n# Time torch's implementation for 3 dimensions\nB = A.permute(0, -2, -1, 1, 2)\n\n67.9 ms ± 438 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+    "crumbs": [
+      "linalg"
+    ]
+  }
+]
