@@ -212,13 +212,13 @@ def _hessian_as_matrix(*args):
 
 # %% ../notebooks/00_filters.ipynb 11
 def frangi(
-    image: torch.Tensor,  # the intput image
-    sigma_range: tuple = (1, 10),  # the range of sigmas to use
-    scale_step: int = 2,  # the step between sigmas
-    sigmas: list = None,  # optional list of sigmas to use
-    alpha: float = 0.5,  # plate-like and line-like structures threshold
-    beta: float = 0.5,  # blob-like structures threshold
-    gamma: float = None,  # second order structure threshold
+    image: torch.Tensor,  # The intput image
+    sigma_range: tuple = (1, 10),  # The range of sigmas to use
+    scale_step: int = 2,  # The step between sigmas
+    sigmas: list = None,  # Optional list of sigmas to use
+    alpha: float = 0.5,  # Plate-like and line-like structures threshold
+    beta: float = 0.5,  # Blob-like structures threshold
+    gamma: float = None,  # Second-order structure threshold
     eps: float = 1e-10,
     device: str | torch.device = None,
 ) -> torch.tensor:
