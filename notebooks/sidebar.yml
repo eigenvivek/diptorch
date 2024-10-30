@@ -1,0 +1,7 @@
+website:
+  sidebar:
+    contents:
+      - index.ipynb
+      - 00_filters.ipynb
+      - 01_linalg.ipynb
+      - 02_utils.ipynb
